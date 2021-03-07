@@ -22,16 +22,6 @@ const double epsilon= 1;
 const double cut_off = 3;
 const double delta = 0.1;
 
-/////////////////////////Output////////////////////////
-ofstream out {"parameters.csv"};
-out<<fixed<<setprecision(4);
-out << "N" <<" " <<"iters" <<" "<< "sigma" <<" "<< "epsilon" <<" "<<"cut_off" <<" "<<"delta"<< endl;
-out << N << " " << iters <<" " <<sigma << " " << epsilon << " " << cut_off << " " <<delta << endl;
-
-out.close();
-
-
-
 double final_time  = 1;
 double x[iters][N];
 double y[iters][N];
@@ -58,6 +48,19 @@ std::normal_distribution<double> distribution (0.0,1.0);
 // Coefficients for smooth cut-off
 double *polynomial_coeffs;
 polynomial_coeffs = determine_polynomial_coeffs(sigma,epsilon,cut_off,delta);
+
+
+/////////////////////////Output////////////////////////
+ofstream out {"parameters.csv"};
+out<<fixed<<setprecision(4);
+out << "N" <<" " <<"iters" <<" "<< "sigma" <<" "<< "epsilon" <<" "<<"cut_off"
+<<" "<<"delta"<< "coeff_A" << "coeff_B" << "coeff_C" << "coeff_D" << end
+out << N << " " << iters <<" " <<sigma << " " << epsilon << " " << cut_off << "
+" <<delta << " " << polynomial_coeffs[0]  << " " << polynomial_coeffs[1] << " "
+<< polynomial_coeffs[2] << " " << polynomial_coeffs[3]  << endl;
+
+out.close();
+
 
 if (spacing <= pow(2,1/6)*sigma ){
    cout << "Warning: Particles are initialized within the repulsive range" <<
