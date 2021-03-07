@@ -10,7 +10,7 @@
 using namespace std;
 
 
-int N = 2; //Number of Particles
+const int N = 2; //Number of Particles
 const double sigma = 1;
 const double epsilon= 1;
 const double cut_off = 3;
@@ -110,15 +110,15 @@ F = force_calculation(x_positions,y_positions,polynomial_coeffs);
 
 
 /////////////////////////Output////////////////////////
-ofstream out {"molecular_data.csv"};
-out<<fixed<<setprecision(4);
-out << "x" <<" "<< "y" <<" "<< "vx" <<" "<<"vy" << endl;
+ofstream mout {"molecular_data.csv"};
+mout<<fixed<<setprecision(4);
+mout << "x" <<" "<< "y" <<" "<< "vx" <<" "<<"vy" << endl;
   for (int i = 0; i<iters; i++)
 	for(int j=0; j<N; ++j){
-	    out << x[i][j] << " " << y[i][j] << " " << vx[i][j] << " " << vy[i][j] << endl;
+	    mout << x[i][j] << " " << y[i][j] << " " << vx[i][j] << " " << vy[i][j] << endl;
 		}
 
-out.close();
+mout.close();
 
 
 
