@@ -20,8 +20,8 @@ int main(){
 
 //////////////////Initialization//////////////////////////
 double L = 1.0; //Length of Box
-int iters = 10; //Number of Iterations
-double spacing = 1;
+int iters = 1000; //Number of Iterations
+double spacing = 1.3;
 
 double final_time  = 1;
 double x[iters][N];
@@ -54,7 +54,7 @@ polynomial_coeffs = determine_polynomial_coeffs(sigma,epsilon,cut_off,delta);
 /////////////////////////Output////////////////////////
 ofstream out {"parameters.csv"};
 out<<fixed<<setprecision(4);
-out << "N" <<" " <<"iters" <<" "<< "sigma" <<" "<< "epsilon" <<" "<<"cut_off" <<" "<<"delta"<< "coeff_A" << "coeff_B" << "coeff_C" << "coeff_D" << endl;
+out << "N" <<" " <<"iters" <<" "<< "sigma" <<" "<< "epsilon" <<" "<<"cut_off" <<" "<<"delta"<<" "<< "a" << "b" << "c" << "c" << endl;
 out << N << " " << iters <<" " <<sigma << " " << epsilon << " " << cut_off << " " <<delta << " " << polynomial_coeffs[0]  << " " << polynomial_coeffs[1] << " " << polynomial_coeffs[2] << " " << polynomial_coeffs[3]  << endl;
 
 out.close();
