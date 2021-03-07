@@ -4,32 +4,48 @@
 #include <iomanip>
 #include <chrono>
 #include <random>
+#include<vector>
+#include "force_calculation.h"
 
 using namespace std;
 
 int main(){
 
 //////////////////Initialization//////////////////////////
-int N = 16; //Number of Particles
+int N = 2; //Number of Particles
 double L = 1.0; //Length of Box
 int iters = 10; //Number of Iterations
+double spacing = 1;
+
+const double sigma = 1;
+const double epsilon= 1;
+const double cut_off = 3;
+const double delta = 0.1;
+
 double final_time  = 1;
 double x[iters][N];
 double y[iters][N];
 double vx[iters][N];
 double vy[iters][N];
+vector<vector<double>>F;
+vector<vector<double>>F1;
+
+
 
 //number of atoms in each direction
 // make it such that n**2 >N, can controll the spacing through this parameter
 int n = int(ceil(pow(N,1.0/2)));
 
-double spacing = L/n;
 double dt  = final_time /iters;
 
 // construct a trivial random generator engine from a time-based seed:
 unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 std::default_random_engine generator (seed);
 std::normal_distribution<double> distribution (0.0,1.0);
+
+// Coefficients for smooth cut-off
+double *polynomial_coeffs;
+polynomial_coeffs = determine_polynomial_coeffs(sigma,epsilon,cut_off,delta);
 
 
 //initialize positions
@@ -55,17 +71,17 @@ for (int i=0;i<n;i++){
 
 // Updating positions and Velocities Using Verlet method
  for (int t=1; t<iters; t++) {
-      Fx, Fy = forces(x[t],y[t]);
+      F = force_calculation(x_positions[t],y_positions[t],polynomial_coeffs);
       for (int j=0; j<N; j++) {
-           x[t+1][j] = x[t][j] + vx[t][j]*dt + 0.5*Fx[j]*dt*dt;
-           y[t+1][j] = y[t][j] + vy[t][j]*dt + 0.5*Fy[j]*dt*dt;
+           x[t+1][j] = x[t][j] + vx[t][j]*dt + 0.5*F[j][0]*dt*dt;
+           y[t+1][j] = y[t][j] + vy[t][j]*dt + 0.5*F[j][1]*dt*dt;
           }
 
-      Fx1, Fy1 = forces(x[t+1],y[t+1]);
+      F1 = force_calculation(x_positions_1[t+1],y_positions_1[t+1],polynomial_coeffs);
 
       for (int j=0; j<N; j++) {
-          vx[t+1][j] = vx[t][j] + 0.5 * dt * (Fx1[j] + Fx[j]) ;
-          vy[t+1][j] = vy[t][j] + 0.5 * dt * (Fy1[j] + Fy[j]) ;
+          vx[t+1][j] = vx[t][j] + 0.5 * dt * (F1[j][0] + F[j][0]) ;
+          vy[t+1][j] = vy[t][j] + 0.5 * dt * (F1[j][1] + F[j][1]) ;
 
       }
  } 
