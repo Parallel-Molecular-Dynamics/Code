@@ -9,18 +9,19 @@
 
 using namespace std;
 
-int main(){
 
-//////////////////Initialization//////////////////////////
 int N = 2; //Number of Particles
-double L = 1.0; //Length of Box
-int iters = 10; //Number of Iterations
-double spacing = 1;
-
 const double sigma = 1;
 const double epsilon= 1;
 const double cut_off = 3;
 const double delta = 0.1;
+
+int main(){
+
+//////////////////Initialization//////////////////////////
+double L = 1.0; //Length of Box
+int iters = 10; //Number of Iterations
+double spacing = 1;
 
 double final_time  = 1;
 double x[iters][N];
