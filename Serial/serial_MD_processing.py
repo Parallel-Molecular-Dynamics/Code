@@ -26,10 +26,10 @@ epsilon = parameters.epsilon.to_numpy()[0]
 rc = parameters.cut_off.to_numpy()[0]*sigma
 delta = parameters.delta.to_numpy()[0]
 nsteps = parameters.iters.to_numpy()[0]
-#a = parameters.a.to_numpy()[0]
-#b = parameters.b.to_numpy()[0]
-#c = parameters.c.to_numpy()[0]
-#d = parameters.d.to_numpy()[0]
+a = parameters.a.to_numpy()[0]
+b = parameters.b.to_numpy()[0]
+c = parameters.c.to_numpy()[0]
+d = parameters.d.to_numpy()[0]
 
 
 x = imported_data.x.to_numpy()
