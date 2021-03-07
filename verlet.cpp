@@ -25,8 +25,8 @@ const double delta = 0.1;
 /////////////////////////Output////////////////////////
 ofstream out {"parameters.csv"};
 out<<fixed<<setprecision(4);
-out << "N" <<" "<< "sigma" <<" "<< "epsilon" <<" "<<"cut_off" <<" "<<"delta"<< endl;
-out << N << " " << sigma << " " << epsilon << " " << cut_off << " " <<delta << endl;
+out << "N" <<" " <<"iters" <<" "<< "sigma" <<" "<< "epsilon" <<" "<<"cut_off" <<" "<<"delta"<< endl;
+out << N << " " << iters <<" " <<sigma << " " << epsilon << " " << cut_off << " " <<delta << endl;
 
 out.close();
 
