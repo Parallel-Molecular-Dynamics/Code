@@ -59,6 +59,10 @@ std::normal_distribution<double> distribution (0.0,1.0);
 double *polynomial_coeffs;
 polynomial_coeffs = determine_polynomial_coeffs(sigma,epsilon,cut_off,delta);
 
+if (spacing <= pow(2,1/6)*sigma ){
+   cout << "Warning: Particles are initialized within the repulsive range" <<
+   endl;
+}
 
 //initialize positions
 int k =0; //counter
