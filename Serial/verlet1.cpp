@@ -1,5 +1,4 @@
 #include <iostream>
-#include<stdlib.h>
 #include <cmath>
 #include <fstream>
 #include <iomanip>
@@ -10,6 +9,7 @@
 
 using namespace std;
 
+
 const int N = 2; //Number of Particles
 const double sigma = 1;
 const double epsilon= 1;
@@ -17,12 +17,11 @@ const double cut_off = 3;
 const double delta = 0.1;
 
 int main(){
+
 //////////////////Initialization//////////////////////////
 double L = 1.0; //Length of Box
-int iters = 1000; //Number of Iterations
-double spacing = 1.3;
-
-
+int iters = 10; //Number of Iterations
+double spacing = 1;
 
 double final_time  = 1;
 double x[iters][N];
@@ -52,6 +51,20 @@ double *polynomial_coeffs;
 polynomial_coeffs = determine_polynomial_coeffs(sigma,epsilon,cut_off,delta);
 
 
+/////////////////////////Output////////////////////////
+ofstream out {"parameters.csv"};
+out<<fixed<<setprecision(4);
+out << "N" <<" " <<"iters" <<" "<< "sigma" <<" "<< "epsilon" <<" "<<"cut_off" <<" "<<"delta"<< "coeff_A" << "coeff_B" << "coeff_C" << "coeff_D" << endl;
+out << N << " " << iters <<" " <<sigma << " " << epsilon << " " << cut_off << " " <<delta << " " << polynomial_coeffs[0]  << " " << polynomial_coeffs[1] << " " << polynomial_coeffs[2] << " " << polynomial_coeffs[3]  << endl;
+
+out.close();
+
+
+if (spacing <= pow(2,1/6)*sigma ){
+   cout << "Warning: Particles are initialized within the repulsive range" <<
+   endl;
+}
+
 //initialize positions
 int k =0; //counter
 for (int i=0;i<n;i++){
@@ -61,8 +74,8 @@ for (int i=0;i<n;i++){
        x_positions[k] = x[0][k] = (i + 0.5)*spacing;
        y_positions[k] = y[0][k] =  (j + 0.5)*spacing;
        //initialize velocities
-       vx[0][k] = 0;//distribution(generator);
-       vy[0][k] = 0;//distribution(generator);
+       vx[0][k] = distribution(generator);
+       vy[0][k] = distribution(generator);
        //cout << x[0][k] << " " << y[0][k] << " " << vx[0][k] << " " << vy[0][k] << endl;
      }
      k++;
@@ -74,36 +87,35 @@ for (int i=0;i<n;i++){
 
 
 // Updating positions and Velocities Using Verlet method
+F = force_calculation(x_positions,y_positions,polynomial_coeffs);
  for (int t=0; t<iters; t++) {
-      F = force_calculation(x_positions,y_positions,polynomial_coeffs);
-      if(t == 1){      cout<<F[0][0]<<' ' << F[0][1]<<endl;cout<<F[1][0]<<' ' << F[1][1]<<endl;}
+
       for (int j=0; j<N; j++) {
            x_positions[j] = x[t+1][j] = x[t][j] + vx[t][j]*dt + 0.5*F[j][0]*dt*dt;
            y_positions[j] = y[t+1][j] = y[t][j] + vy[t][j]*dt + 0.5*F[j][1]*dt*dt;
           }
-      if(t == 1){cout<<x_positions[0]<<' ' <<y_positions[0]<<endl;cout<<x_positions[1]<<' ' <<y_positions[1]<<endl;}
 
       F1 = force_calculation(x_positions,y_positions,polynomial_coeffs);
-      if(t == 1){      cout<<F1[0][0]<<' ' << F1[0][1]<<endl;cout<<F1[1][0]<<' ' << F1[1][1]<<endl;}
 
       for (int j=0; j<N; j++) {
           vx[t+1][j] = vx[t][j] + 0.5 * dt * (F1[j][0] + F[j][0]) ;
           vy[t+1][j] = vy[t][j] + 0.5 * dt * (F1[j][1] + F[j][1]) ;
 
       }
+      F = F1;
  }
 
 
 /////////////////////////Output////////////////////////
-ofstream out {"molecular_data.csv"};
-out<<fixed<<setprecision(4);
-out << "x" <<" "<< "y" <<" "<< "vx" <<" "<<"vy" << endl;
+ofstream mout {"molecular_data.csv"};
+mout<<fixed<<setprecision(4);
+mout << "x" <<" "<< "y" <<" "<< "vx" <<" "<<"vy" << endl;
   for (int i = 0; i<iters; i++)
 	for(int j=0; j<N; ++j){
-	    out << x[i][j] << " " << y[i][j] << " " << vx[i][j] << " " << vy[i][j] << endl;
+	    mout << x[i][j] << " " << y[i][j] << " " << vx[i][j] << " " << vy[i][j] << endl;
 		}
 
-out.close();
+mout.close();
 
 
 
