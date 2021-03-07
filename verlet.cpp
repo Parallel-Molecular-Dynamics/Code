@@ -22,6 +22,16 @@ const double epsilon= 1;
 const double cut_off = 3;
 const double delta = 0.1;
 
+/////////////////////////Output////////////////////////
+ofstream out {"parameters.csv"};
+out<<fixed<<setprecision(4);
+out << "N" <<" "<< "sigma" <<" "<< "epsilon" <<" "<<"cut_off" <<" "<<"delta"<< endl;
+out << N << " " << sigma << " " << epsilon << " " << cut_off << " " <<delta << endl;
+
+out.close();
+
+
+
 double final_time  = 1;
 double x[iters][N];
 double y[iters][N];
