@@ -88,7 +88,7 @@ for (int i=0;i<n;i++){
 
 // Updating positions and Velocities Using Verlet method
 F = force_calculation(x_positions,y_positions,polynomial_coeffs);
- for (int t=0; t<iters; t++) {
+ for (int t=0; t<iters-1; t++) {
 
       for (int j=0; j<N; j++) {
            x_positions[j] = x[t+1][j] = x[t][j] + vx[t][j]*dt + 0.5*F[j][0]*dt*dt;
