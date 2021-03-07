@@ -92,6 +92,7 @@ for (int i=0;i<n;i++){
 /////////////////////////Output////////////////////////
 ofstream out {"molecular_data.csv"};
 out<<fixed<<setprecision(4);
+out << "x" <<" "<< "y" <<" "<< "vx" <<" "<<"vy" << endl;
   for (int i = 0; i<iters; i++)
 	for(int j=0; j<N; ++j){
 	    out << x[i][j] << " " << y[i][j] << " " << vx[i][j] << " " << vy[i][j] << endl;
