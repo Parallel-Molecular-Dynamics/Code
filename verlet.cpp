@@ -27,6 +27,8 @@ double x[iters][N];
 double y[iters][N];
 double vx[iters][N];
 double vy[iters][N];
+double x_positions[N];
+double y_positions[N];
 vector<vector<double>>F;
 vector<vector<double>>F1;
 
@@ -54,8 +56,8 @@ for (int i=0;i<n;i++){
   for (int j=0;j<n;j++){
      if (k<N){
        //initialize positions
-       x[0][k] = (i + 0.5)*spacing;
-       y[0][k] =  (j + 0.5)*spacing;
+       x_positions[k] = x[0][k] = (i + 0.5)*spacing;
+       y_positions[k] = y[0][k] =  (j + 0.5)*spacing;
        //initialize velocities
        vx[0][k] = distribution(generator);
        vy[0][k] = distribution(generator);
@@ -71,21 +73,21 @@ for (int i=0;i<n;i++){
 
 // Updating positions and Velocities Using Verlet method
  for (int t=1; t<iters; t++) {
-      F = force_calculation(x_positions[t],y_positions[t],polynomial_coeffs);
+      F = force_calculation(x_positions,y_positions,polynomial_coeffs);
       for (int j=0; j<N; j++) {
-           x[t+1][j] = x[t][j] + vx[t][j]*dt + 0.5*F[j][0]*dt*dt;
-           y[t+1][j] = y[t][j] + vy[t][j]*dt + 0.5*F[j][1]*dt*dt;
+           x_positions[j] = x[t+1][j] = x[t][j] + vx[t][j]*dt + 0.5*F[j][0]*dt*dt;
+           y_positions[j] = y[t+1][j] = y[t][j] + vy[t][j]*dt + 0.5*F[j][1]*dt*dt;
           }
 
-      F1 = force_calculation(x_positions_1[t+1],y_positions_1[t+1],polynomial_coeffs);
+      F1 = force_calculation(x_positions,y_positions,polynomial_coeffs);
 
       for (int j=0; j<N; j++) {
           vx[t+1][j] = vx[t][j] + 0.5 * dt * (F1[j][0] + F[j][0]) ;
           vy[t+1][j] = vy[t][j] + 0.5 * dt * (F1[j][1] + F[j][1]) ;
 
       }
- } 
- 
+ }
+
 
 /////////////////////////Output////////////////////////
 ofstream out {"molecular_data.csv"};
