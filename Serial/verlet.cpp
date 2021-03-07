@@ -54,7 +54,7 @@ polynomial_coeffs = determine_polynomial_coeffs(sigma,epsilon,cut_off,delta);
 /////////////////////////Output////////////////////////
 ofstream out {"parameters.csv"};
 out<<fixed<<setprecision(4);
-out << "N" <<" " <<"iters" <<" "<< "sigma" <<" "<< "epsilon" <<" "<<"cut_off" <<" "<<"delta"<<" "<< "a" << "b" << "c" << "c" << endl;
+out << "N" <<" " <<"iters" <<" "<< "sigma" <<" "<< "epsilon" <<" "<<"cut_off" <<" "<<"delta"<<" "<< "a" <<" "<< "b" <<" "<< "c" << " "<< "d" << endl;
 out << N << " " << iters <<" " <<sigma << " " << epsilon << " " << cut_off << " " <<delta << " " << polynomial_coeffs[0]  << " " << polynomial_coeffs[1] << " " << polynomial_coeffs[2] << " " << polynomial_coeffs[3]  << endl;
 
 out.close();
