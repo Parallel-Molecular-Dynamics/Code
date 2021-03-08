@@ -120,12 +120,6 @@ vector<vector<double>> force_calculation(double x_positions[], double y_position
     double change_in_x_force,change_in_y_force;
     vector<vector<double>> F(N,vector<double>(2,0));
     
-    for(int i =0;i<2;i++){
-        for(int j=0;j<N;j++){
-            F[i][j] = 0;
-        }
-    }
-
     for(int i=0;i<N;++i){
         for(int j=i+1;j<N;++j){
             r = distance(x_positions[i],y_positions[i], x_positions[j], y_positions[j]);
