@@ -3,13 +3,14 @@
 #include <fstream>
 #include <iomanip>
 #include <chrono>
+#include<math.h>
 #include <random>
 #include "force_calculation.h"
 
 using namespace std;
 
 
-const int N = 2; //Number of Particles
+const int N = 5; //Number of Particles
 const int iters = 10000; //Number of Iterations
 const double final_time  = 100;
 
@@ -87,8 +88,8 @@ int main(){
             particles[i].vx += 0.5*dt*F[i].x;
             particles[i].vy += 0.5*dt*F[i].y;
 
-            particles[i].x += (dt*particles[i].vx) % L;  // modulo L to implement periodicity
-            particles[i].y += (dt*particles[i].vy) % L;
+            particles[i].x += fmod(dt*particles[i].vx, L);  // modulo L to implement periodicity
+            particles[i].y += fmod(dt*particles[i].vy, L);
         }
 
         force_calculation(F,particles,polynomial_coeffs);
