@@ -137,7 +137,7 @@ double LJ_potential_derivative(double r,double coeffs[]){
 double LJ_potential(double r,double coeffs[]){
 
     double rc = cut_off*sigma;
-    double potential;
+    double potential=0;
 
     if(r<rc){
         potential = 4*epsilon*(power(sigma/r,12) - power(sigma/r,6));
