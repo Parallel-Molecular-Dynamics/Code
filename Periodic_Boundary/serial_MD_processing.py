@@ -53,6 +53,9 @@ if(N==2):
     ax.set_ylabel('x')
     ax.set_title('x positions')
     ax.legend()
+
+
+plt.show()
     
 
     

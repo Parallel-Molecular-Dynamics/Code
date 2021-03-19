@@ -45,7 +45,7 @@ double power(double x,int n){
     for(int i = 0;i<n;i++){
         xn = xn* x;
     }
-    
+
     return xn;
 }
 
@@ -55,7 +55,7 @@ double * determine_polynomial_coeffs(double sigma,double epsilon,int cut_off,dou
     double A[n][n+1];
     static double coeffs[4];
     double rc = cut_off*sigma;
-    
+
     A[0][0] = 1;
     A[0][1] = rc;
     A[0][2] = power(rc,2);
@@ -80,7 +80,7 @@ double * determine_polynomial_coeffs(double sigma,double epsilon,int cut_off,dou
     A[3][3] = 3*power(rc+delta,2);
     A[3][4] = 0;
 
-    for(int i=0;i<n;i++){                   
+    for(int i=0;i<n;i++){
         for(int j=i+1;j<n;j++){
             if(abs(A[i][i]) < abs(A[j][i])){
                 for(int k=0;k<n+1;k++){
@@ -108,16 +108,16 @@ double * determine_polynomial_coeffs(double sigma,double epsilon,int cut_off,dou
     }
 
     /* Backward substitution for discovering values of unknowns */
-    for(int i=n-1;i>=0;i--){                     
+    for(int i=n-1;i>=0;i--){
         coeffs[i]=A[i][n];
         for(int j=i+1;j<n;j++){
             if(i!=j){
               coeffs[i]=coeffs[i]-A[i][j]*coeffs[j];
-            }          
+            }
         }
-        coeffs[i]=coeffs[i]/A[i][i];  
+        coeffs[i]=coeffs[i]/A[i][i];
     }
-    
+
     return coeffs;
 }
 
@@ -155,17 +155,18 @@ int force_calculation(struct Force F[], struct Particle particles[],double coeff
     double potential_derivative;
     struct Force Delta_F;
 
-    struct Particle imaginary_particles; 
+    struct Particle imaginary_particles;
 
     for(int i = 0; i<N;i++){
         F[i].x = F[i].y = particles[i].W = 0;
     }
+   
+    int a = 0;
 
     for(int i=0;i<N;++i){        // index i spans all particles in the actual domain
         for(int j=i+1;j<N;++j){  // index j starts from i+1 to avoid double computations
             for (int k=-1; k<=1; ++k){        // Moving particle j around to the 9 different domains (our
-                for (int l=-1; l<=1; ++l){    // actual domain is the one for k=0,l=0 - the rest are imaginary ones 
-
+                for (int l=-1; l<=1; ++l){    // actual domain is the one for k=0,l=0 - the rest are imaginary ones
 // -------------------------------------------------- Moving j around -----------------------------------------------------------
                     imaginary_particles.x = particles[j].x + k * L; // moved j particle x-coordinate
                     imaginary_particles.y = particles[j].y + l * L; // moved j particle y-coordinate
@@ -174,82 +175,67 @@ int force_calculation(struct Force F[], struct Particle particles[],double coeff
 
                     if(r<cut_off*sigma+delta){
                         potential_derivative = LJ_potential_derivative(r,coeffs);
-                    } 
-                    else{
-                        potential_derivative = 0;
-                    }
-                    // computing force contributions on particle i in the x and y direction
-                    Delta_F.x = (potential_derivative/r)*(imaginary_particles.x - particles[i].x); 
-                    Delta_F.y = (potential_derivative/r)*(imaginary_particles.y - particles[i].y);
+                        // computing force contributions on particle i in the x and y direction
+                        Delta_F.x = (potential_derivative/r)*(imaginary_particles.x - particles[i].x);
+                        Delta_F.y = (potential_derivative/r)*(imaginary_particles.y - particles[i].y);
 
-                    // incrementing the force on particle i by the previously computed contributions
-                    F[i].x +=  Delta_F.x;
-                    F[i].y +=   Delta_F.y;
-                    particles[i].W += 0.5 * LJ_potential(r,coeffs);
 
-                    
-                    if (k==0 & l==0){         // only increment the force for particle j if we are in the original domain so that it's not doubly comp
-                        F[j].x -=  Delta_F.x; // it would be doubly computed below when we move i around  
-                        F[j].y -=   Delta_F.y; 
-                        particles[j].W += 0.5 * LJ_potential(r,coeffs); 
-                    }
+                        // incrementing the force on particle i by the previously computed contributions
+                        F[i].x +=  Delta_F.x;
+                        F[i].y +=   Delta_F.y;
+                        particles[i].W += 0.5 * LJ_potential(r,coeffs);
+
+
+                        if (k==0 & l==0){         // only increment the force for particle j if we are in the original domain so that it's not doubly comp
+                            F[j].x -=  Delta_F.x; // it would be doubly computed below when we move i around
+                            F[j].y -=   Delta_F.y;
+                            particles[j].W += 0.5 * LJ_potential(r,coeffs);
+                        }
+	           a = 1;
+	           break;           
+		   
+                   }
+	       }
+       if (a ==1){
+          a = 0;
+	  break;
+       }
+    }
 
 // -------------------------------------------------- Moving i around -----------------------------------------------------------
                     // we have moved particle j around and computed the force contributions to i - we must now move i around and
-		    // compute the force contributions to j, since we will not be able to do that in a later loop given that we 
+		    // compute the force contributions to j, since we will not be able to do that in a later loop given that we
 		    // have set the i,j indexing so that double computations are avoided (j starts from i+1)
-                    else{  // so that we don't doubly calculate force ij in actual domain
-                        imaginary_particles.x = particles[i].x + k * L; // moved i particle x-coordinate
-                        imaginary_particles.y = particles[i].y + l * L; // moved i particle y-coordinate
 
-                        r = distance(particles[j], imaginary_particles); // find distance between particle j and moved particle i
+              for (int k=-1; k<=1; ++k){        // Moving particle j around to the 9 different domains (our
+                  for (int l=-1; l<=1; ++l){    // actual domain is the one for k=0,l=0 - the rest are imaginary ones
+                    if (k!=0 || l!=0){
+                       imaginary_particles.x = particles[i].x + k * L; // moved i particle x-coordinate
+                       imaginary_particles.y = particles[i].y + l * L; // moved i particle y-coordinate
 
-                        if(r<cut_off*sigma+delta){
-                            potential_derivative = LJ_potential_derivative(r,coeffs);
-                        } 
-                        else{
-                            potential_derivative = 0;
-                            }
+                       r = distance(particles[j], imaginary_particles); // find distance between particle j and moved particle i
 
-                        Delta_F.x = (potential_derivative/r)*(particles[j].x - imaginary_particles.x); 
-                        Delta_F.y = (potential_derivative/r)*(particles[j].y  - imaginary_particles.y);
+                       if(r<cut_off*sigma+delta){
+                          potential_derivative = LJ_potential_derivative(r,coeffs);
+                          Delta_F.x = (potential_derivative/r)*(particles[j].x - imaginary_particles.x);
+                          Delta_F.y = (potential_derivative/r)*(particles[j].y  - imaginary_particles.y);
 
-                        F[j].x +=  Delta_F.x;
-                        F[j].y +=   Delta_F.y;
-                        particles[j].W += 0.5 * LJ_potential(r,coeffs);
-                    }
+                          F[j].x +=  Delta_F.x;
+                          F[j].y +=   Delta_F.y;
+                          particles[j].W += 0.5 * LJ_potential(r,coeffs);
+			  a = 1;
+			  break;
+		     }
+                  }
 
-// -----------------------------------------------------------------------------------------------------------------------------
-                }
-	        }
-        }
-    // Computing contributions to the force from imaginary i's to actual particle i
-        for (int k=-1; k<=1; ++k){
-            for (int l=-1; l<=1; ++l){ 
-                if (k!=0 & l!=0) {
-                    imaginary_particles.x = particles[i].x + k * L; // moved i particle x-coordinate
-                    imaginary_particles.y = particles[i].y + l * L; // moved i particle y-coordinate
-
-                    r = distance(particles[i], imaginary_particles); // find distance between imaginary particle i and actual particle i
-
-                    if(r<cut_off*sigma+delta){
-                        potential_derivative = LJ_potential_derivative(r,coeffs);
-                    } 
-                    else{
-                        potential_derivative = 0;
-                    }
-
-                    Delta_F.x = (potential_derivative/r)*(particles[i].x - imaginary_particles.x); 
-                    Delta_F.y = (potential_derivative/r)*(particles[i].y  - imaginary_particles.y);
-
-                    F[i].x +=  Delta_F.x;
-                    F[i].y +=  Delta_F.y;
-                    particles[i].W += 0.5 * LJ_potential(r,coeffs);
-                }
-            
+	      }
+	     if (a == 1){
+	        a = 0;
+		break;
+	     }
             }
         }
     }
-    
+
     return 0;
 }

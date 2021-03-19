@@ -10,21 +10,33 @@
 using namespace std;
 
 
-const int N = 5; //Number of Particles
-const int iters = 10000; //Number of Iterations
-const double final_time  = 100;
+const int N = 6; //Number of Particles
+const int iters = 10000000; //Number of Iterations
+const double final_time  = 50;
 
 
 const double sigma = 1;
 const double epsilon= 1;
-const double cut_off = 3;
+const double cut_off = 2.5*sigma;
 const double delta = 0.1;
-const double L = 1.0; //Length of Box
+const double L = 20; //Length of Box
 const double spacing = 1.3;
 const double dt  = final_time /iters;
 
 struct Particle particles[N];
 struct Force F[N];
+
+
+double modulo(double n, double d){
+
+    double mod = fmod(n,d);
+
+    if (mod < 0){
+       mod += d;
+    }
+return mod; 
+}
+
 
 int main(){
 
@@ -71,9 +83,11 @@ int main(){
         }
 
     }
-    cout<< "...done." << endl;
+    cout<< "...1 done." << endl;
 
     force_calculation(F,particles,polynomial_coeffs);
+
+    cout<< "...2 done." << endl;
 
     ////Open an output file and read out initial conditions/////
     ofstream mout {"molecular_data.csv"};
@@ -88,8 +102,11 @@ int main(){
             particles[i].vx += 0.5*dt*F[i].x;
             particles[i].vy += 0.5*dt*F[i].y;
 
-            particles[i].x += fmod(dt*particles[i].vx, L);  // modulo L to implement periodicity
-            particles[i].y += fmod(dt*particles[i].vy, L);
+            particles[i].x += dt*particles[i].vx;  // modulo L to implement periodicity
+            particles[i].x = modulo(particles[i].x, L);  // modulo L to implement periodicity
+
+            particles[i].y += dt*particles[i].vy;
+            particles[i].y = modulo(particles[i].y, L);
         }
 
         force_calculation(F,particles,polynomial_coeffs);
