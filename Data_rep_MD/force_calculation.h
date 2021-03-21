@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include<cmath>
+#include <chrono>
+#include <random>
 #include<mpi.h>
 
 
@@ -12,6 +14,8 @@ extern const double sigma;
 extern const double epsilon;
 extern const double cut_off;
 extern const double delta;
+extern const int n;
+extern const double spacing;
 
 struct Particle
 
@@ -228,5 +232,68 @@ int force_calculation(int rank,struct Force F[], struct Particle particles[],dou
             //cout<<rank<<" "<<idx << " "<<j<<" "<<LJ_potential(r,coeffs)<<endl;
         }
     }
+    return 0;
+}
+void output_parameters(int iters,double polynomial_coeffs[]){
+    ofstream out {"parameters.csv"};
+    out<<fixed<<setprecision(4);
+
+    out << "N" <<"," <<"iters" <<","<< "sigma" <<","<< "epsilon" <<","<<"cut_off" <<","<<"delta"<<","<< "a" <<","<< "b" <<","<< "c" << ","<< "d" << endl;
+    out << N << "," << iters <<"," <<sigma << "," << epsilon << "," << cut_off << "," <<delta << "," << polynomial_coeffs[0]  << "," << polynomial_coeffs[1] << "," << polynomial_coeffs[2] << "," << polynomial_coeffs[3]  << endl;
+
+    out.close();
+}
+
+
+void calculate_energy_and_output(struct Particle particles[],double coeffs[],ofstream &Energy_out,ofstream &MD_out){
+
+    double W = 0;
+    double K = 0;
+    double r;
+
+    for(int i = 0; i<N; i++){
+        MD_out << particles[i].x << "," << particles[i].y<<","<<particles[i].vx<<","<<particles[i].vy<<endl;
+
+        K += 0.5*(pow(particles[i].vx,2)+pow(particles[i].vy,2));
+        for(int j=i+1;j<N;j++){
+            r = distance(particles[i],particles[j]);
+            W +=LJ_potential(r,coeffs);
+        }
+    }
+    Energy_out << K << "," << W << endl;
+}
+
+int initialise_particles(int rank,struct Particle all_particles[], struct Particle particle_subset[]){
+    // construct a trivial random generator engine from a time-based seed:
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator (seed);
+    std::normal_distribution<double> distribution (0.0,1.0);
+    
+
+    int k =0; 
+    for (int i=0;i<n;i++){
+        for (int j=0;j<n;j++){
+            if (k<N){
+            
+                all_particles[k].x = (i + 0.5)*spacing;
+                all_particles[k].y = (j + 0.5)*spacing;
+              
+                all_particles[k].vx = 0;//distribution(generator);
+                all_particles[k].vy = 0;//distribution(generator);
+                if(rank == 0){cout << all_particles[k].x << " " << all_particles[k].y << " " << all_particles[k].vx << " " << all_particles[k].vy << endl;}
+            }
+            k++;
+        }
+    }
+    // Pick out the relevant subset of particles for the given processor.
+    int idx;
+    for(int i=0; i <Np;i++){
+        idx =(Np*rank)+i;
+        particle_subset[i].x = all_particles[idx].x;
+        particle_subset[i].y = all_particles[idx].y;
+        particle_subset[i].vx = all_particles[idx].vx;
+        particle_subset[i].vy = all_particles[idx].vy;
+    }
+
     return 0;
 }
