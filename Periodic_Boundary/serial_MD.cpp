@@ -10,8 +10,8 @@
 using namespace std;
 
 
-const int N = 6; //Number of Particles
-const int iters = 10000000; //Number of Iterations
+const int N = 5; //Number of Particles
+const int iters = 1000000; //Number of Iterations
 const double final_time  = 50;
 
 
@@ -34,7 +34,7 @@ double modulo(double n, double d){
     if (mod < 0){
        mod += d;
     }
-return mod; 
+return mod;
 }
 
 
@@ -66,14 +66,14 @@ int main(){
     int n = int(ceil(pow(N,1.0/2)));
 
     cout << "Beginning initialisation..."<<endl;
-    int k =0; 
+    int k =0;
     for (int i=0;i<n;i++){
         for (int j=0;j<n;j++){
             if (k<N){
-            
-                particles[k].x = (i + 0.5)*spacing;
-                particles[k].y = (j + 0.5)*spacing;
-              
+
+                particles[k].x = (i + 0.5)*spacing - L/2;
+                particles[k].y = (j + 0.5)*spacing - L/2;
+
                 particles[k].vx = 0;//distribution(generator);
                 particles[k].vy = 0;//distribution(generator);
                 cout << particles[k].x << " " << particles[k].y << " " << particles[k].vx << " " << particles[k].vy << endl;
@@ -94,7 +94,7 @@ int main(){
     mout<< "x,y,vx,vy,K,W"<<endl;
     for(int i = 0; i<N; i++){
         mout << particles[i].x << "," << particles[i].y<<","<<particles[i].vx<<","<<particles[i].vy<<","<<particles[i].K<<","<<particles[i].W<<endl;
-    }   
+    }
 
     for (int t=0; t<iters-1; t++) {
 
@@ -103,10 +103,10 @@ int main(){
             particles[i].vy += 0.5*dt*F[i].y;
 
             particles[i].x += dt*particles[i].vx;  // modulo L to implement periodicity
-            particles[i].x = modulo(particles[i].x, L);  // modulo L to implement periodicity
+            particles[i].x = fmod(particles[i].x, L);  // modulo L to implement periodicity
 
             particles[i].y += dt*particles[i].vy;
-            particles[i].y = modulo(particles[i].y, L);
+            particles[i].y = fmod(particles[i].y, L);
         }
 
         force_calculation(F,particles,polynomial_coeffs);
@@ -117,12 +117,12 @@ int main(){
 
             particles[i].K = 0.5*(particles[i].vx * particles[i].vx + particles[i].vy * particles[i].vy);
         }
-        
+
         cout<< "Timestep "<< t+1 << " of " << iters-1 << " done."<<endl;
 
         for(int i = 0; i<N; i++){
             mout << particles[i].x << "," << particles[i].y<<","<<particles[i].vx<<","<<particles[i].vy<<","<<particles[i].K<<","<<particles[i].W<<endl;
-        }   
+        }
     }
     mout.close();
     return 0;
