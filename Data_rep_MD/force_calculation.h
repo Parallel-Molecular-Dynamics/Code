@@ -44,17 +44,6 @@ MPI_Datatype make_MPI_struct_particle(){
     return particle_type;
 }
 
-MPI_Datatype make_MPI_struct_force(){
-    MPI_Datatype force_type;
-    int lengths[2] = { 1,1};
-    const MPI_Aint displacements[2] = { 0, sizeof(double)};
-    MPI_Datatype types[2] = { MPI_DOUBLE, MPI_DOUBLE};
-    MPI_Type_create_struct(2, lengths, displacements, types, &force_type);
-    MPI_Type_commit(&force_type);
-
-    return force_type;
-}
-
 double distance(struct Particle p1, struct Particle p2){
 
     double xdiff = p1.x - p2.x;
