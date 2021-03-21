@@ -10,18 +10,34 @@
 using namespace std;
 
 
-const int N = 5; //Number of Particles
-const int iters = 1000000; //Number of Iterations
-const double final_time  = 50;
+//const int    iters       = 100000; //Number of Iterations
+//const double final_time  = 50;
+//const double sigma       = 1;
+//const double epsilon     = 1;
+//const double L           = 3.9;
+//const double cut_off     = 1.8; //0.7 * L/2;
+//const double spacing     = 1.3;//0.5*cut_off;
+//const int    n           = 3; //floor(L/spacing);
+//const int    N           = n*n; //Number of Particles
+//const double delta       = 0.1;
+//const double dt          = final_time /iters;
+
+const int    iters       = 1000000; //Number of Iterations
+const double final_time  = 500;
+const double sigma       = 1;
+const double epsilon     = 1;
+const double spacing     = 1.3;//0.5*cut_off;
+const int    n           = 4; //floor(L/spacing);
+const int    N           = n*n; //Number of Particles
+const double L           = n*spacing;
+const double cut_off     = 0.9 * L/2;
+const double delta       = 0.1;
+const double dt          = final_time /iters;
 
 
-const double sigma = 1;
-const double epsilon= 1;
-const double cut_off = 2.5*sigma;
-const double delta = 0.1;
-const double L = 20; //Length of Box
-const double spacing = 1.3;
-const double dt  = final_time /iters;
+
+
+
 
 struct Particle particles[N];
 struct Force F[N];
@@ -32,7 +48,7 @@ double modulo(double n, double d){
     double mod = fmod(n,d);
 
     if (mod < 0){
-       mod += d;
+       mod = -mod;
     }
 return mod;
 }
@@ -63,7 +79,7 @@ int main(){
     out.close();
 
     // make it such that n**2 >N, can control the spacing through this parameter
-    int n = int(ceil(pow(N,1.0/2)));
+
 
     cout << "Beginning initialisation..."<<endl;
     int k =0;
@@ -71,8 +87,8 @@ int main(){
         for (int j=0;j<n;j++){
             if (k<N){
 
-                particles[k].x = (i + 0.5)*spacing - L/2;
-                particles[k].y = (j + 0.5)*spacing - L/2;
+                particles[k].x = (i + 0.5)*spacing;
+                particles[k].y = (j + 0.5)*spacing;
 
                 particles[k].vx = 0;//distribution(generator);
                 particles[k].vy = 0;//distribution(generator);
@@ -103,10 +119,10 @@ int main(){
             particles[i].vy += 0.5*dt*F[i].y;
 
             particles[i].x += dt*particles[i].vx;  // modulo L to implement periodicity
-            particles[i].x = fmod(particles[i].x, L);  // modulo L to implement periodicity
+            particles[i].x = modulo(particles[i].x, L);  // modulo L to implement periodicity
 
             particles[i].y += dt*particles[i].vy;
-            particles[i].y = fmod(particles[i].y, L);
+            particles[i].y = modulo(particles[i].y, L);
         }
 
         force_calculation(F,particles,polynomial_coeffs);

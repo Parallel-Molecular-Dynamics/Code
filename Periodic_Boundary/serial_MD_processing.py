@@ -10,6 +10,8 @@ N = parameters.N.to_numpy()[0]
 nsteps = parameters.iters.to_numpy()[0]
 
 ## Reshaping to get a matrix where each column is a particle and each row a time step.
+#N is the number of particles.
+#nsteps is the number of iterations.
 x = np.reshape(imported_data.x.to_numpy(),(nsteps,N))
 y = np.reshape(imported_data.y.to_numpy(),(nsteps,N))
 vx = np.reshape(imported_data.vx.to_numpy(),(nsteps,N))
@@ -18,7 +20,7 @@ K = np.sum(np.reshape(imported_data.K.to_numpy(),(nsteps,N)),axis =1)
 W = np.sum(np.reshape(imported_data.W.to_numpy(),(nsteps,N)), axis = 1)
 
 
-# Snapshot of particles at a given timestep            
+# Snapshot of particles at a given timestep
 fig,ax = plt.subplots(1,1)
 
 ax.scatter(x[nsteps-1,:],y[nsteps-1,:], marker = 'x')
@@ -34,75 +36,77 @@ ax.set_xlabel('Time step')
 ax.set_ylabel('E')
 ax.set_title('Energy')
 
-if(N==2):
-## Plots for a single pair of particles.
-    fig,ax = plt.subplots(1,1)
-    
-    ax.plot(y[:,0], label = 'Particle 1')
-    ax.plot(y[:,1], label = 'Particle 2')
-    ax.set_xlabel('Time step')
-    ax.set_ylabel('y')
-    ax.set_title('y positions')
-    ax.legend()
-    
-    fig,ax = plt.subplots(1,1)
-    
-    ax.plot(x[:,0], label = 'Particle 1')
-    ax.plot(x[:,1], label = 'Particle 2')
-    ax.set_xlabel('Time step')
-    ax.set_ylabel('x')
-    ax.set_title('x positions')
-    ax.legend()
 
+## Plots for a single pair of particles.
+fig,ax = plt.subplots(1,1)
+
+ax.plot(y[:,0], label = 'Particle 1')
+ax.plot(y[:,1], label = 'Particle 2')
+ax.set_xlabel('Time step')
+ax.set_ylabel('y')
+ax.set_title('y positions')
+ax.legend()
+
+fig,ax = plt.subplots(1,1)
+
+ax.plot(x[:,0], label = 'Particle 1')
+ax.plot(x[:,1], label = 'Particle 2')
+ax.set_xlabel('Time step')
+ax.set_ylabel('x')
+ax.set_title('x positions')
+ax.legend()
+
+## Plots for a single pair of particles.
+fig,ax = plt.subplots(1,1)
+
+ax.plot(vy[:,0], label = 'Particle 1')
+ax.plot(vy[:,1], label = 'Particle 2')
+ax.set_xlabel('Time step')
+ax.set_ylabel('y')
+ax.set_title('y velocity')
+ax.legend()
+
+fig,ax = plt.subplots(1,1)
+
+ax.plot(vx[:,0], label = 'Particle 1')
+ax.plot(vx[:,1], label = 'Particle 2')
+ax.set_xlabel('Time step')
+ax.set_ylabel('x')
+ax.set_title('x velocity')
+ax.legend()
 
 plt.show()
-    
-
-    
 
 
 
+from matplotlib import pyplot as plt
+from celluloid import Camera
+import numpy as np
 
 
+# create figure object
+fig = plt.figure()
+# load axis box
+ax = plt.axes()
+# set axis limit
+#ax.set_ylim(0, 10)
+#ax.set_xlim(0, 10)
+L = np.max(np.max(x))
+camera = Camera(fig)
+for i in range(100):
+    ax.set(xlim=(0, L), ylim=(0, L))
+    ax.set_title("N = "+str(N)+" particles")
+    ax.scatter(x[1000*i,:],y[1000*i,:])
+    plt.pause(0.01)
+    camera.snap()
 
+    plt.gca().clear()
+#    ax.clear()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+animation = camera.animate()
+#animation.save('animation.gif', writer='PillowWriter', fps=2)
+animation.save('animation.gif') #, writer='imagemagick', fps=2)
+animation.save('animation.gif' , writer='matplotlib.animation.PillowWriter', fps=2)
 
 
 

@@ -160,9 +160,9 @@ int force_calculation(struct Force F[], struct Particle particles[],double coeff
     for(int i = 0; i<N;i++){
         F[i].x = F[i].y = particles[i].W = 0;
     }
-   
-    int a = 0;
 
+    int a = 0;
+    
     for(int i=0;i<N;++i){        // index i spans all particles in the actual domain
         for(int j=i+1;j<N;++j){  // index j starts from i+1 to avoid double computations
             for (int k=-1; k<=1; ++k){        // Moving particle j around to the 9 different domains (our
@@ -179,20 +179,21 @@ int force_calculation(struct Force F[], struct Particle particles[],double coeff
                         Delta_F.x = (potential_derivative/r)*(imaginary_particles.x - particles[i].x);
                         Delta_F.y = (potential_derivative/r)*(imaginary_particles.y - particles[i].y);
 
+
                         // incrementing the force on particle i by the previously computed contributions
                         F[i].x +=  Delta_F.x;
                         F[i].y +=   Delta_F.y;
-                        particles[i].W += 0.5 * LJ_potential(r,coeffs);
+                        particles[i].W += LJ_potential(r,coeffs);
 
 
                         if (k==0 & l==0){         // only increment the force for particle j if we are in the original domain so that it's not doubly comp
                             F[j].x -=  Delta_F.x; // it would be doubly computed below when we move i around
                             F[j].y -=   Delta_F.y;
-                            particles[j].W += 0.5 * LJ_potential(r,coeffs);
+                            //particles[j].W += 0.5 * LJ_potential(r,coeffs);
                         }
 	           a = 1;
-	           break;           
-		   
+	           break;
+
                    }
 	       }
        if (a ==1){
@@ -202,13 +203,13 @@ int force_calculation(struct Force F[], struct Particle particles[],double coeff
     }
 
 // -------------------------------------------------- Moving i around -----------------------------------------------------------
-              // we have moved particle j around and computed the force contributions to i - we must now move i around and
-              // compute the force contributions to j, since we will not be able to do that in a later loop given that we
-      	      // have set the i,j indexing so that double computations are avoided (j starts from i+1)
+                    // we have moved particle j around and computed the force contributions to i - we must now move i around and
+		    // compute the force contributions to j, since we will not be able to do that in a later loop given that we
+		    // have set the i,j indexing so that double computations are avoided (j starts from i+1)
 
               for (int k=-1; k<=1; ++k){        // Moving particle j around to the 9 different domains (our
                   for (int l=-1; l<=1; ++l){    // actual domain is the one for k=0,l=0 - the rest are imaginary ones
-                    if (k!=0 || l!=0){
+                    if (k != 0 || l != 0){
                        imaginary_particles.x = particles[i].x + k * L; // moved i particle x-coordinate
                        imaginary_particles.y = particles[i].y + l * L; // moved i particle y-coordinate
 
@@ -221,7 +222,7 @@ int force_calculation(struct Force F[], struct Particle particles[],double coeff
 
                           F[j].x +=  Delta_F.x;
                           F[j].y +=   Delta_F.y;
-                          particles[j].W += 0.5 * LJ_potential(r,coeffs);
+                          particles[j].W += LJ_potential(r,coeffs);
 			  a = 1;
 			  break;
 		     }
