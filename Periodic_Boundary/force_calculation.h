@@ -124,7 +124,7 @@ double * determine_polynomial_coeffs(double sigma,double epsilon,int cut_off,dou
 double LJ_potential_derivative(double r,double coeffs[]){
 
     double rc = cut_off*sigma;
-    double potential_derivative;
+    double potential_derivative = 0;
 
     if(r<rc){
         potential_derivative = 24*epsilon*((power(sigma,6)/power(r,7))-(2*power(sigma,12)/power(r,13)));
@@ -179,7 +179,6 @@ int force_calculation(struct Force F[], struct Particle particles[],double coeff
                         Delta_F.x = (potential_derivative/r)*(imaginary_particles.x - particles[i].x);
                         Delta_F.y = (potential_derivative/r)*(imaginary_particles.y - particles[i].y);
 
-
                         // incrementing the force on particle i by the previously computed contributions
                         F[i].x +=  Delta_F.x;
                         F[i].y +=   Delta_F.y;
@@ -203,9 +202,9 @@ int force_calculation(struct Force F[], struct Particle particles[],double coeff
     }
 
 // -------------------------------------------------- Moving i around -----------------------------------------------------------
-                    // we have moved particle j around and computed the force contributions to i - we must now move i around and
-		    // compute the force contributions to j, since we will not be able to do that in a later loop given that we
-		    // have set the i,j indexing so that double computations are avoided (j starts from i+1)
+              // we have moved particle j around and computed the force contributions to i - we must now move i around and
+              // compute the force contributions to j, since we will not be able to do that in a later loop given that we
+      	      // have set the i,j indexing so that double computations are avoided (j starts from i+1)
 
               for (int k=-1; k<=1; ++k){        // Moving particle j around to the 9 different domains (our
                   for (int l=-1; l<=1; ++l){    // actual domain is the one for k=0,l=0 - the rest are imaginary ones
@@ -217,8 +216,8 @@ int force_calculation(struct Force F[], struct Particle particles[],double coeff
 
                        if(r<cut_off*sigma+delta){
                           potential_derivative = LJ_potential_derivative(r,coeffs);
-                          Delta_F.x = (potential_derivative/r)*(particles[j].x - imaginary_particles.x);
-                          Delta_F.y = (potential_derivative/r)*(particles[j].y  - imaginary_particles.y);
+                          Delta_F.x = (potential_derivative/r)*(imaginary_particles.x - particles[j].x);
+                          Delta_F.y = (potential_derivative/r)*(imaginary_particles.y - particles[j].y);
 
                           F[j].x +=  Delta_F.x;
                           F[j].y +=   Delta_F.y;
