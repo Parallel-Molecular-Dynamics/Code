@@ -53,7 +53,6 @@ int main(){
     }
 
     MPI_Datatype particle_type = make_MPI_struct_particle();
-    MPI_Datatype force_type = make_MPI_struct_force();
 
     // Coefficients for smooth cut-off in the LJ potential.
     polynomial_coeffs = determine_polynomial_coeffs(sigma,epsilon,cut_off,delta);
