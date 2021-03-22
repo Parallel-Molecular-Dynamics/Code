@@ -207,8 +207,6 @@ int force_calculation(struct Force F[], struct Particle particles[],double coeff
                         F[j].y -=   Delta_F.y;
 		     }
 
-
-
         }
     }
 

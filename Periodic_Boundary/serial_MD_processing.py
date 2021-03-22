@@ -8,6 +8,7 @@ parameters = pd.read_csv("parameters.csv", sep = ',')
 
 N = parameters.N.to_numpy()[0]
 nsteps = parameters.iters.to_numpy()[0]
+L  = parameters.L.to_numpy()[0]
 
 ## Reshaping to get a matrix where each column is a particle and each row a time step.
 #N is the number of particles.
@@ -91,12 +92,11 @@ ax = plt.axes()
 # set axis limit
 #ax.set_ylim(0, 10)
 #ax.set_xlim(0, 10)
-L = np.max(np.max(x))
 camera = Camera(fig)
 for i in range(1000):
     ax.set(xlim=(0, L), ylim=(0, L))
     ax.set_title("N = "+str(N)+" particles")
-    ax.scatter(x[1000*i,:],y[1000*i,:])
+    ax.scatter(x[100*i,:],y[100*i,:])
     plt.pause(0.01)
     camera.snap()
 
@@ -105,7 +105,7 @@ for i in range(1000):
 
 animation = camera.animate()
 #animation.save('animation.gif', writer='PillowWriter', fps=2)
-animation.save('animation.gif', writer='imagemagick', fps=2)   
+animation.save('animation.gif', writer='imagemagick', fps=1)
 #animation.save('animation.gif' , writer='matplotlib.animation.PillowWriter', fps=2)
 
 

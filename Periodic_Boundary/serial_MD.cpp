@@ -7,31 +7,36 @@
 #include <random>
 #include "force_calculation.h"
 
+
+
 using namespace std;
 
-//const int    iters       = 10000; //Number of Iterations
-//const double final_time  = 10;
-//const double sigma       = 1;
-//const double epsilon     = 1;
-//const double L           = 10;
-//const double cut_off     = 3; //0.7 * L/2;
-//const double spacing     = 1.3;//0.5*cut_off;
-//const int    n           = 2; //floor(L/spacing);
-//const int    N           = n*n; //Number of Particles
-//const double delta       = 0.1;
-//const double dt          = final_time /iters;
 
-const int    iters       = 1000000; //Number of Iterations
-const double final_time  = 500;
+const int    iters       = 10000; //Number of Iterations
+const double final_time  = 608;
 const double sigma       = 1;
 const double epsilon     = 1;
-const double spacing     = 1.3;//0.5*cut_off;
-const int    n           = 8; //floor(L/spacing);
+const double L           = 10;
+const double cut_off     = 0.6 * L/2;
+const double spacing     = 0.4*cut_off;
+const int    n           = 2; //floor(L/spacing);
 const int    N           = n*n; //Number of Particles
-const double L           = n*spacing;
-const double cut_off     = 0.9 * L/2;
 const double delta       = 0.1;
 const double dt          = final_time /iters;
+
+
+
+//const int    iters       = 1000000; //Number of Iterations
+//const double final_time  = 500;
+//const double sigma       = 1;
+//const double epsilon     = 1;
+//const double spacing     = 1.3;//0.5*cut_off;
+//const int    n           = 8; //floor(L/spacing);
+//const int    N           = n*n; //Number of Particles
+//const double L           = n*spacing;
+//const double cut_off     = 0.9 * L/2;
+//const double delta       = 0.1;
+//const double dt          = final_time /iters;
 
 
 struct Particle particles[N];
@@ -51,9 +56,13 @@ return mod;
 int main(){
 
     if (spacing <= pow(2,1/6)*sigma ){
-        cout << "Warning: Particles are initialized within the repulsive range" <<
-        endl;
+        cout << "Warning: Particles are initialized within the repulsive range" << endl;
     }
+
+    if (spacing > cut_off){
+        cout << "Warning: Particles are too widely spaced" << endl;
+    }
+
 
     // construct a trivial random generator engine from a time-based seed:
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -67,8 +76,10 @@ int main(){
     /////////////////////////Output Parameters////////////////////////
     ofstream out {"parameters.csv"};
     out<<fixed<<setprecision(4);
-    out << "N" <<"," <<"iters" <<","<< "sigma" <<","<< "epsilon" <<","<<"cut_off" <<","<<"delta"<<","<< "a" <<","<< "b" <<","<< "c" << ","<< "d" << endl;
-    out << N << "," << iters <<"," <<sigma << "," << epsilon << "," << cut_off << "," <<delta << "," << polynomial_coeffs[0]  << "," << polynomial_coeffs[1] << "," << polynomial_coeffs[2] << "," << polynomial_coeffs[3]  << endl;
+    out << "N" <<"," <<"iters" <<","<< "sigma" <<","<< "epsilon" <<","<<"cut_off" <<","<<"delta"<<","<< "a" <<","<< "b" <<","<< "c" << ","<< "d" <<
+    "," <<"L" <<  endl;
+    out << N << "," << iters <<"," <<sigma << "," << epsilon << "," << cut_off << "," <<delta << "," << polynomial_coeffs[0]  << "," <<
+    polynomial_coeffs[1] << "," << polynomial_coeffs[2] << "," << polynomial_coeffs[3]  << "," << L << endl;
 
     out.close();
 
