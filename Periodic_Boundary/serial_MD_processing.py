@@ -93,7 +93,7 @@ ax = plt.axes()
 #ax.set_xlim(0, 10)
 L = np.max(np.max(x))
 camera = Camera(fig)
-for i in range(100):
+for i in range(1000):
     ax.set(xlim=(0, L), ylim=(0, L))
     ax.set_title("N = "+str(N)+" particles")
     ax.scatter(x[1000*i,:],y[1000*i,:])
@@ -105,8 +105,8 @@ for i in range(100):
 
 animation = camera.animate()
 #animation.save('animation.gif', writer='PillowWriter', fps=2)
-animation.save('animation.gif') #, writer='imagemagick', fps=2)
-animation.save('animation.gif' , writer='matplotlib.animation.PillowWriter', fps=2)
+animation.save('animation.gif', writer='imagemagick', fps=2)   
+#animation.save('animation.gif' , writer='matplotlib.animation.PillowWriter', fps=2)
 
 
 
