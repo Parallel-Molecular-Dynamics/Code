@@ -9,15 +9,14 @@
 
 using namespace std;
 
-
-//const int    iters       = 100000; //Number of Iterations
-//const double final_time  = 50;
+//const int    iters       = 10000; //Number of Iterations
+//const double final_time  = 10;
 //const double sigma       = 1;
 //const double epsilon     = 1;
-//const double L           = 3.9;
-//const double cut_off     = 1.8; //0.7 * L/2;
+//const double L           = 10;
+//const double cut_off     = 3; //0.7 * L/2;
 //const double spacing     = 1.3;//0.5*cut_off;
-//const int    n           = 3; //floor(L/spacing);
+//const int    n           = 2; //floor(L/spacing);
 //const int    N           = n*n; //Number of Particles
 //const double delta       = 0.1;
 //const double dt          = final_time /iters;
@@ -27,7 +26,7 @@ const double final_time  = 500;
 const double sigma       = 1;
 const double epsilon     = 1;
 const double spacing     = 1.3;//0.5*cut_off;
-const int    n           = 4; //floor(L/spacing);
+const int    n           = 8; //floor(L/spacing);
 const int    N           = n*n; //Number of Particles
 const double L           = n*spacing;
 const double cut_off     = 0.9 * L/2;
@@ -35,13 +34,8 @@ const double delta       = 0.1;
 const double dt          = final_time /iters;
 
 
-
-
-
-
 struct Particle particles[N];
 struct Force F[N];
-
 
 double modulo(double n, double d){
 
