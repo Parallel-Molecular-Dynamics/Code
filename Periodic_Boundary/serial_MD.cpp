@@ -13,14 +13,14 @@ using namespace std;
 
 
 const int    iters       = 10000; //Number of Iterations
-const double final_time  = 608;
+const double final_time  = 100;
 const double sigma       = 1;
 const double epsilon     = 1;
-const double L           = 10;
-const double cut_off     = 0.6 * L/2;
-const double spacing     = 0.4*cut_off;
-const int    n           = 2; //floor(L/spacing);
+const int    n           = 8;
 const int    N           = n*n; //Number of Particles
+const double spacing     = 1.1; //1.1;
+const double L           = n*spacing;
+const double cut_off     = 0.7*L/2;//0.95 * L/2;
 const double delta       = 0.1;
 const double dt          = final_time /iters;
 

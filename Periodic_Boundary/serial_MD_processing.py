@@ -93,10 +93,12 @@ ax = plt.axes()
 #ax.set_ylim(0, 10)
 #ax.set_xlim(0, 10)
 camera = Camera(fig)
-for i in range(1000):
+leap = 10
+for i in range(int(nsteps/leap)):
     ax.set(xlim=(0, L), ylim=(0, L))
     ax.set_title("N = "+str(N)+" particles")
-    ax.scatter(x[100*i,:],y[100*i,:])
+    ax.scatter(x[leap*i,:],y[leap*i,:])
+    ax.grid()
     plt.pause(0.01)
     camera.snap()
 
