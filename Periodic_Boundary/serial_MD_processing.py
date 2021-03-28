@@ -93,7 +93,7 @@ ax = plt.axes()
 #ax.set_ylim(0, 10)
 #ax.set_xlim(0, 10)
 camera = Camera(fig)
-leap = 10
+leap = 200
 for i in range(int(nsteps/leap)):
     ax.set(xlim=(0, L), ylim=(0, L))
     ax.set_title("N = "+str(N)+" particles")
@@ -107,7 +107,7 @@ for i in range(int(nsteps/leap)):
 
 animation = camera.animate()
 #animation.save('animation.gif', writer='PillowWriter', fps=2)
-animation.save('animation.gif', writer='imagemagick', fps=1)
+animation.save('animation.gif', writer='imagemagick', fps=2)
 #animation.save('animation.gif' , writer='matplotlib.animation.PillowWriter', fps=2)
 
 

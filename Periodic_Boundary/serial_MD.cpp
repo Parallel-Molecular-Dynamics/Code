@@ -12,14 +12,14 @@
 using namespace std;
 
 
-const int    iters       = 10000; //Number of Iterations
-const double final_time  = 100;
+const int    iters       = 300000; //Number of Iterations
+const double final_time  = 300;
 const double sigma       = 1;
 const double epsilon     = 1;
 const int    n           = 8;
 const int    N           = n*n; //Number of Particles
-const double spacing     = 1.1; //1.1;
-const double L           = n*spacing;
+const double spacing     = 4; //1.1;
+const double L           = n*spacing + 50;
 const double cut_off     = 0.7*L/2;//0.95 * L/2;
 const double delta       = 0.1;
 const double dt          = final_time /iters;
@@ -47,7 +47,7 @@ double modulo(double n, double d){
     double mod = fmod(n,d);
 
     if (mod < 0){
-       mod = -mod;
+       mod = d+mod;
     }
 return mod;
 }
