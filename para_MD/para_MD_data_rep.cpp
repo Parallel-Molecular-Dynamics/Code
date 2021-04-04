@@ -9,16 +9,16 @@
 
 using namespace std;
 
-const int nproc          = 2;
-const int    iters       = 30000; //Number of Iterations
-const double final_time  = 300;
+const int nproc          = 4;
+const int    iters       = 100000; //Number of Iterations
+const double final_time  = 100;
 const double sigma       = 1;
 const double epsilon     = 1;
-const int    n           = 2;
+const int    n           = 12;
 const int    N           = n*n; //Number of Particles
 const double spacing     = 1.3; //1.1;
 const double L           = n*spacing;
-const double cut_off     = L/2;//0.95 * L/2;
+const double cut_off     = 3;//0.95 * L/2;
 const double delta       = 0.1;
 const double dt          = final_time /iters;
 const int Np             = N/nproc;
@@ -43,7 +43,7 @@ int main(){
         return 1;
     }
 
-    if (spacing <= pow(2,1/6)*sigma ){
+    if (spacing <= pow(2,0.16666666666666666)*sigma ){
         cout << "Warning: Particles are initialized within the repulsive range" <<
         endl;
     }
