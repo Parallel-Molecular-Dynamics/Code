@@ -219,7 +219,7 @@ int force_calculation(int rank, struct Force F[], struct Particle particles[],do
         for(int j=idx+1;j<N;++j){ 
 
             dx  = particles[j].x - particles[idx].x;
-            dy  = particles[j].y - particles[i].y;
+            dy  = particles[j].y - particles[idx].y;
 		    
 		    if (dx > L/2){
                 dx -= L;
